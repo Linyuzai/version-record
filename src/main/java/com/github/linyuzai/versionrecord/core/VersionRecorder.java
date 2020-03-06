@@ -17,16 +17,16 @@ public class VersionRecorder {
         VersionRecorder.formatter = formatter;
     }
 
-    public static synchronized void record(List<VersionInformation> versions) {
+    public static synchronized void record(List<VersionInformation> vis) {
         final DateTimeFormatter dtf = VersionRecorder.formatter;
         if (dtf == null) {
             throw new NullPointerException("DateTimeFormatter is null");
         }
         LocalDate now = LocalDate.now();
-        VersionRecorder.versions = new ArrayList<>();
-        for (VersionInformation version : versions) {
+        List<VersionInformation> versions = new ArrayList<>();
+        for (VersionInformation version : vis) {
             boolean isSame = false;
-            for (VersionInformation have : VersionRecorder.versions) {
+            for (VersionInformation have : versions) {
                 if (version.getVersion().equals(have.getVersion())
                         && version.getDescription().equals(have.getDescription())
                         && version.getDate().equals(have.getDate())
@@ -37,9 +37,10 @@ public class VersionRecorder {
             }
             if (!isSame) {
                 version.applyFormatter(dtf, now);
-                VersionRecorder.versions.add(version);
+                versions.add(version);
             }
         }
-        VersionRecorder.versions.sort(VersionInformation::sort);
+        versions.sort(VersionInformation::sort);
+        VersionRecorder.versions = versions;
     }
 }

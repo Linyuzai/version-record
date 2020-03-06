@@ -26,7 +26,7 @@ public class VersionPointRegister implements ApplicationRunner, ApplicationConte
     @Override
     public void run(ApplicationArguments args) throws Exception {
         logger.info("Version record start scanning...");
-        List<VersionInformation> versions = new ArrayList<>();
+        final List<VersionInformation> versions = new ArrayList<>();
         ClassPathScanningCandidateComponentProvider provider = new ClassPathScanningCandidateComponentProvider(false);
         provider.addIncludeFilter((metadataReader, metadataReaderFactory) -> {
             Class<?> beanClass;
@@ -49,7 +49,7 @@ public class VersionPointRegister implements ApplicationRunner, ApplicationConte
                 if (enableVersionRecord == null) {
                     throw new RuntimeException("Could not happen");
                 }
-                VersionRecorder.setFormatter(DateTimeFormatter.ofPattern(enableVersionRecord.dateTimeFormatter()));
+                VersionRecorder.setFormatter(DateTimeFormatter.ofPattern(enableVersionRecord.dateFormatter()));
                 for (String basePackage : enableVersionRecord.basePackages()) {
                     provider.findCandidateComponents(basePackage);
                 }

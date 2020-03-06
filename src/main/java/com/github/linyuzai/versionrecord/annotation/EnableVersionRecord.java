@@ -16,5 +16,5 @@ public @interface EnableVersionRecord {
 
     String[] basePackages() default {};
 
-    String dateTimeFormatter() default "yyyy-MM-dd";
+    String dateFormatter() default "yyyy-MM-dd";
 }
