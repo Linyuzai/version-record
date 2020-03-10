@@ -44,21 +44,45 @@ public class VersionPointRegister implements ApplicationRunner, ApplicationConte
         Map<String, Object> beans = context.getBeansWithAnnotation(EnableVersionRecord.class);
         Set<Map.Entry<String, Object>> entries = beans.entrySet();
         if (entries.size() == 1) {
+            Set<String> allSet = new HashSet<>();
             for (Map.Entry<String, Object> entry : entries) {
                 EnableVersionRecord enableVersionRecord = context.findAnnotationOnBean(entry.getKey(), EnableVersionRecord.class);
                 if (enableVersionRecord == null) {
                     throw new RuntimeException("Could not happen");
                 }
                 VersionRecorder.setFormatter(DateTimeFormatter.ofPattern(enableVersionRecord.dateFormatter()));
-                for (String basePackage : enableVersionRecord.basePackages()) {
-                    provider.findCandidateComponents(basePackage);
-                }
+                allSet.addAll(Arrays.asList(enableVersionRecord.basePackages()));
+//                for (String basePackage : enableVersionRecord.basePackages()) {
+//                    provider.findCandidateComponents(basePackage);
+//                }
             }
             Map<String, VersionScanPath> pathMap = context.getBeansOfType(VersionScanPath.class);
             for (VersionScanPath scanPath : pathMap.values()) {
-                for (String basePackage : scanPath.getBasePackages()) {
-                    provider.findCandidateComponents(basePackage);
+                allSet.addAll(scanPath.getBasePackages());
+//                for (String basePackage : scanPath.getBasePackages()) {
+//                    provider.findCandidateComponents(basePackage);
+//                }
+            }
+            List<String> basePackages = new ArrayList<>();
+            for (String one : allSet) {
+                Iterator<String> iterator = basePackages.iterator();
+                boolean needAdd = true;
+                while (iterator.hasNext()) {
+                    String next = iterator.next();
+                    if (one.startsWith(next)) {
+                        needAdd = false;
+                        break;
+                    } else if (next.startsWith(one)) {
+                        iterator.remove();
+                        break;
+                    }
                 }
+                if (needAdd) {
+                    basePackages.add(one);
+                }
+            }
+            for (String basePackage : basePackages) {
+                provider.findCandidateComponents(basePackage);
             }
             VersionRecorder.record(versions);
             logger.info("Version record scan finished");
