@@ -47,7 +47,8 @@ public class VersionRecorder {
 
     public static List<VersionInformation> getVersions(Date start, Date end) {
         ZoneId zoneId = ZoneId.systemDefault();
-        return getVersions(start.toInstant().atZone(zoneId).toLocalDate(), end.toInstant().atZone(zoneId).toLocalDate());
+        return getVersions(start == null ? null : start.toInstant().atZone(zoneId).toLocalDate(),
+                end == null ? null : end.toInstant().atZone(zoneId).toLocalDate());
     }
 
     public static List<VersionInformation> getVersions(LocalDate start, LocalDate end) {
