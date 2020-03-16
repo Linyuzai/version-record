@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -20,20 +21,20 @@ public class VersionRecordController {
     private ObjectMapper objectMapper = new ObjectMapper();
 
     @GetMapping("/list")
-    public List<VersionInformation> getVersionRecords(@DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate start,
-                                                      @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate end) throws JsonProcessingException {
+    public List<VersionInformation> getVersionRecords(@DateTimeFormat(pattern = "yyyy-MM-dd") Date start,
+                                                      @DateTimeFormat(pattern = "yyyy-MM-dd") Date end) throws JsonProcessingException {
         return VersionRecorder.getVersions(start, end);
     }
 
     @GetMapping("/json")
-    public String getVersionRecordJson(@DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate start,
-                                       @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate end) throws JsonProcessingException {
+    public String getVersionRecordJson(@DateTimeFormat(pattern = "yyyy-MM-dd") Date start,
+                                       @DateTimeFormat(pattern = "yyyy-MM-dd") Date end) throws JsonProcessingException {
         return objectMapper.writeValueAsString(VersionRecorder.getVersions(start, end));
     }
 
     @GetMapping("/json-format")
-    public String getVersionRecordFormatJson(@DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate start,
-                                             @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate end) throws JsonProcessingException {
+    public String getVersionRecordFormatJson(@DateTimeFormat(pattern = "yyyy-MM-dd") Date start,
+                                             @DateTimeFormat(pattern = "yyyy-MM-dd") Date end) throws JsonProcessingException {
         return JsonUtils.format(getVersionRecordJson(start, end));
     }
 }

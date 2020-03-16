@@ -1,6 +1,7 @@
 package com.github.linyuzai.versionrecord.core;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -42,6 +43,11 @@ public class VersionRecorder {
         }
         versions.sort(VersionInformation::sort);
         VersionRecorder.versions = versions;
+    }
+
+    public static List<VersionInformation> getVersions(Date start, Date end) {
+        ZoneId zoneId = ZoneId.systemDefault();
+        return getVersions(start.toInstant().atZone(zoneId).toLocalDate(), end.toInstant().atZone(zoneId).toLocalDate());
     }
 
     public static List<VersionInformation> getVersions(LocalDate start, LocalDate end) {
