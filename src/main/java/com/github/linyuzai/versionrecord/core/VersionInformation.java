@@ -80,4 +80,12 @@ public class VersionInformation {
     public int sort(VersionInformation vi) {
         return vi._date.compareTo(_date);
     }
+
+    public boolean dateBefore(LocalDate date) {
+        return _date.isBefore(date);
+    }
+
+    public boolean dateAfter(LocalDate date) {
+        return _date.isAfter(date);
+    }
 }

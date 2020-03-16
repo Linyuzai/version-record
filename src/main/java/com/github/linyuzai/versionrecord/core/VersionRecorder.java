@@ -43,4 +43,18 @@ public class VersionRecorder {
         versions.sort(VersionInformation::sort);
         VersionRecorder.versions = versions;
     }
+
+    public static List<VersionInformation> getVersions(LocalDate start, LocalDate end) {
+        List<VersionInformation> temp = new ArrayList<>();
+        for (VersionInformation version : VersionRecorder.versions) {
+            if (start != null && version.dateBefore(start)) {
+                continue;
+            }
+            if (end != null && version.dateAfter(end)) {
+                continue;
+            }
+            temp.add(version);
+        }
+        return temp;
+    }
 }
