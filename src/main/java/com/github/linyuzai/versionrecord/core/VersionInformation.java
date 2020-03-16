@@ -7,6 +7,9 @@ public class VersionInformation {
 
     private String version;
     private String description;
+    private String branch;
+    private String[] dependServices;
+    private String[] dependTables;
     private String date;
     private String location;
     private LocalDate _date;
@@ -25,6 +28,30 @@ public class VersionInformation {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getBranch() {
+        return branch;
+    }
+
+    public void setBranch(String branch) {
+        this.branch = branch;
+    }
+
+    public String[] getDependServices() {
+        return dependServices;
+    }
+
+    public void setDependServices(String[] dependServices) {
+        this.dependServices = dependServices;
+    }
+
+    public String[] getDependTables() {
+        return dependTables;
+    }
+
+    public void setDependTables(String[] dependTables) {
+        this.dependTables = dependTables;
     }
 
     public String getDate() {

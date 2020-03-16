@@ -116,6 +116,9 @@ public class VersionPointRegister implements ApplicationRunner, ApplicationConte
         VersionInformation vi = new VersionInformation();
         vi.setVersion(vp.version());
         vi.setDescription(vp.description());
+        vi.setBranch(vp.branch());
+        vi.setDependServices(vp.dependServices());
+        vi.setDependTables(vp.dependTables());
         vi.setDate(vp.date());
         vi.setLocation(method == null ? cls.getName() : cls.getName() + "#" + method.getName());
         return vi;

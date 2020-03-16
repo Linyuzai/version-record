@@ -7,9 +7,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
-@VersionPoint(description = "测试1", date = "2020-03-03")
-@VersionPoint(description = "测试2", date = "2020-02-28")
-@VersionPoint(description = "测试3", date = "2020-03-02")
+@VersionPoint(description = "测试1", branch = "master", date = "2020-03-03")
+@VersionPoint(description = "测试2", branch = "master", date = "2020-02-28")
+@VersionPoint(description = "测试3", branch = "master", date = "2020-03-02")
 @EnableVersionRecord
 @SpringBootApplication
 public class VersionRecordApplication {
