@@ -3,7 +3,7 @@ package com.github.linyuzai.versionrecord.core;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-public class VersionInformation {
+public class VersionPointInformation {
 
     private String version;
     private String description;
@@ -11,7 +11,7 @@ public class VersionInformation {
     private String[] dependServices;
     private String[] dependTables;
     private String date;
-    private String location;
+    private String[] locations;
     private LocalDate _date;
 
     public String getVersion() {
@@ -62,12 +62,12 @@ public class VersionInformation {
         this.date = date;
     }
 
-    public String getLocation() {
-        return location;
+    public String[] getLocations() {
+        return locations;
     }
 
-    public void setLocation(String location) {
-        this.location = location;
+    public void setLocations(String[] locations) {
+        this.locations = locations;
     }
 
     public void applyFormatter(DateTimeFormatter formatter, LocalDate now) {
@@ -77,7 +77,7 @@ public class VersionInformation {
         }
     }
 
-    public int sort(VersionInformation vi) {
+    public int sort(VersionPointInformation vi) {
         return vi._date.compareTo(_date);
     }
 

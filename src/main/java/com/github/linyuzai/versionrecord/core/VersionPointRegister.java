@@ -3,6 +3,8 @@ package com.github.linyuzai.versionrecord.core;
 import com.github.linyuzai.versionrecord.annotation.EnableVersionRecord;
 import com.github.linyuzai.versionrecord.annotation.VersionPoint;
 import com.github.linyuzai.versionrecord.annotation.VersionPoints;
+import com.github.linyuzai.versionrecord.filter.DefaultVersionRecordFilter;
+import com.github.linyuzai.versionrecord.filter.VersionRecordFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -26,7 +28,7 @@ public class VersionPointRegister implements ApplicationRunner, ApplicationConte
     @Override
     public void run(ApplicationArguments args) throws Exception {
         logger.info("Version record start scanning...");
-        final List<VersionInformation> versions = new ArrayList<>();
+        final List<VersionPointInformation> versions = new ArrayList<>();
         ClassPathScanningCandidateComponentProvider provider = new ClassPathScanningCandidateComponentProvider(false);
         provider.addIncludeFilter((metadataReader, metadataReaderFactory) -> {
             Class<?> beanClass;
@@ -50,14 +52,20 @@ public class VersionPointRegister implements ApplicationRunner, ApplicationConte
                 if (enableVersionRecord == null) {
                     throw new RuntimeException("Could not happen");
                 }
-                VersionRecorder.setFormatter(DateTimeFormatter.ofPattern(enableVersionRecord.dateFormatter()));
+                VersionRecorder.getInstance().setFormatter(DateTimeFormatter.ofPattern(enableVersionRecord.dateFormatter()));
+                Class<? extends VersionRecordFilter> filterClass = enableVersionRecord.filter();
+                if (filterClass == DefaultVersionRecordFilter.class) {
+                    VersionRecorder.getInstance().setFilter(DefaultVersionRecordFilter.getInstance());
+                } else {
+                    VersionRecorder.getInstance().setFilter(filterClass.newInstance());
+                }
                 allSet.addAll(Arrays.asList(enableVersionRecord.basePackages()));
 //                for (String basePackage : enableVersionRecord.basePackages()) {
 //                    provider.findCandidateComponents(basePackage);
 //                }
             }
-            Map<String, VersionScanPath> pathMap = context.getBeansOfType(VersionScanPath.class);
-            for (VersionScanPath scanPath : pathMap.values()) {
+            Map<String, VersionPointScanPath> pathMap = context.getBeansOfType(VersionPointScanPath.class);
+            for (VersionPointScanPath scanPath : pathMap.values()) {
                 allSet.addAll(scanPath.getBasePackages());
 //                for (String basePackage : scanPath.getBasePackages()) {
 //                    provider.findCandidateComponents(basePackage);
@@ -84,23 +92,23 @@ public class VersionPointRegister implements ApplicationRunner, ApplicationConte
             for (String basePackage : basePackages) {
                 provider.findCandidateComponents(basePackage);
             }
-            VersionRecorder.record(versions);
+            VersionRecorder.getInstance().record(versions);
             logger.info("Version record scan finished");
         } else {
             throw new RuntimeException("Multi @EnableVersionRecord found");
         }
     }
 
-    private static List<VersionInformation> recordVersionOnClass(Class<?> cls) {
+    private static List<VersionPointInformation> recordVersionOnClass(Class<?> cls) {
         return processVersionPoints(cls.getAnnotation(VersionPoint.class), cls.getAnnotation(VersionPoints.class), cls, null);
     }
 
-    private static List<VersionInformation> recordVersionOnMethod(Class<?> cls, Method method) {
+    private static List<VersionPointInformation> recordVersionOnMethod(Class<?> cls, Method method) {
         return processVersionPoints(method.getAnnotation(VersionPoint.class), method.getAnnotation(VersionPoints.class), cls, method);
     }
 
-    private static List<VersionInformation> processVersionPoints(VersionPoint vp, VersionPoints vps, Class<?> cls, Method method) {
-        List<VersionInformation> vil = new ArrayList<>();
+    private static List<VersionPointInformation> processVersionPoints(VersionPoint vp, VersionPoints vps, Class<?> cls, Method method) {
+        List<VersionPointInformation> vil = new ArrayList<>();
         if (vp != null) {
             vil.add(transferVersionInformation(vp, cls, method));
         }
@@ -112,15 +120,15 @@ public class VersionPointRegister implements ApplicationRunner, ApplicationConte
         return vil;
     }
 
-    private static VersionInformation transferVersionInformation(VersionPoint vp, Class<?> cls, Method method) {
-        VersionInformation vi = new VersionInformation();
+    private static VersionPointInformation transferVersionInformation(VersionPoint vp, Class<?> cls, Method method) {
+        VersionPointInformation vi = new VersionPointInformation();
         vi.setVersion(vp.version());
         vi.setDescription(vp.description());
         vi.setBranch(vp.branch());
         vi.setDependServices(vp.dependServices());
         vi.setDependTables(vp.dependTables());
         vi.setDate(vp.date());
-        vi.setLocation(method == null ? cls.getName() : cls.getName() + "#" + method.getName());
+        vi.setLocations(new String[]{method == null ? cls.getName() : cls.getName() + "#" + method.getName()});
         return vi;
     }
 
