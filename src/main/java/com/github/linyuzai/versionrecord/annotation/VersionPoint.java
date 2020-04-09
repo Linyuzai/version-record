@@ -29,6 +29,13 @@ public @interface VersionPoint {
     String branch();
 
     /**
+     * 编写的人
+     *
+     * @return 作者
+     */
+    String author();
+
+    /**
      * 该新增或修改会需要其他服务同步修改
      *
      * @return 需要依赖的服务

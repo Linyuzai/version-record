@@ -8,6 +8,7 @@ public class VersionPointInformation {
     private String version;
     private String description;
     private String branch;
+    private String author;
     private String[] dependServices;
     private String[] dependTables;
     private String date;
@@ -36,6 +37,14 @@ public class VersionPointInformation {
 
     public void setBranch(String branch) {
         this.branch = branch;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
     }
 
     public String[] getDependServices() {

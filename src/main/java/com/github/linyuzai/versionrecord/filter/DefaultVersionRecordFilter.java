@@ -8,16 +8,6 @@ import java.util.*;
 
 public class DefaultVersionRecordFilter implements VersionRecordFilter {
 
-    private static final DefaultVersionRecordFilter sInstance = new DefaultVersionRecordFilter();
-
-    private DefaultVersionRecordFilter() {
-
-    }
-
-    public static DefaultVersionRecordFilter getInstance() {
-        return sInstance;
-    }
-
     @Override
     public List<VersionPointInformation> filter(List<VersionPointInformation> sources, DateTimeFormatter dtf) {
         LocalDate now = LocalDate.now();
@@ -28,6 +18,7 @@ public class DefaultVersionRecordFilter implements VersionRecordFilter {
                 if (vi.getVersion().equals(have.getVersion())
                         && vi.getDescription().equals(have.getDescription())
                         && vi.getBranch().equals(have.getBranch())
+                        && vi.getAuthor().equals(have.getAuthor())
                         && vi.getDate().equals(have.getDate())) {
                     boolean isLocationsSame = Arrays.equals(vi.getLocations(), have.getLocations());
                     boolean isDependServicesSame = Arrays.equals(vi.getDependServices(), have.getDependServices());

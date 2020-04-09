@@ -10,20 +10,12 @@ import java.util.stream.Collectors;
 
 public class VersionRecorder {
 
-    private static final VersionRecorder sInstance = new VersionRecorder();
+    //private static final VersionRecorder sInstance = new VersionRecorder();
 
     private DateTimeFormatter formatter;
     private VersionRecordFilter filter;
     private List<VersionPointInformation> records;
     private Map<String, List<VersionPointInformation>> branchRecords;
-
-    private VersionRecorder() {
-
-    }
-
-    public static VersionRecorder getInstance() {
-        return sInstance;
-    }
 
     public VersionRecorder duplicate() {
         VersionRecorder recorder = new VersionRecorder();
